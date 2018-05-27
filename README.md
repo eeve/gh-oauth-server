@@ -1,4 +1,4 @@
-# gh-oauth-server
+# proxy.oauth
 
 ```sh
 $ npm start
