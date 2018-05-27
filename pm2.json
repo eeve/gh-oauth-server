@@ -1,0 +1,25 @@
+{
+	"apps": [
+		{
+			"name": "proxy.oauth",
+			"script": "server.js",
+			"cwd": ".",
+			"exec_mode": "cluster",
+			"instances": 1,
+			"max_memory_restart": "50M",
+			"autorestart": true,
+			"args": [],
+			"env": {
+				"NODE_ENV": "production",
+				"ORIGIN": "*",
+				"CLIENT_ID": "your client_id",
+				"CLIENT_SECRET": "your client_secret",
+				"PORT": 2000
+			},
+			"env_test": {
+				"NODE_ENV": "development"
+			}
+		}
+	  ]
+  }
+  

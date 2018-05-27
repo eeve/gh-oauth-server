@@ -2,6 +2,7 @@ const app = require('express')()
 const request = require('request')
 const bodyParser = require('body-parser')
 const upload = require('multer')()
+const qs = require('querystring')
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', process.env.ORIGIN || '*')
@@ -13,13 +14,29 @@ app.use((req, res, next) => {
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.post('*', upload.array(), (req, res) => {
+app.get('/api/oauth/authorize', (req, res) => {
+  const redirect_uri = req.query.callback || req.get('Origin')
+  const query = {
+    scope: 'public_repo',
+    redirect_uri,
+    client_id: process.env.CLIENT_ID
+  }
+  const url = `https://github.com/login/oauth/authorize?${qs.stringify(query)}`
+  return res.redirect(url)
+})
+
+app.post('/api/oauth/token', upload.array(), (req, res) => {
+  const form = {
+    ...req.body,
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET
+  }
   request.post({
     url: 'https://github.com/login/oauth/access_token',
-    form: req.body,
+    form,
     headers: {
       'Accept': 'application/json',
-      'User-Agent': 'gh-oauth-server',
+      'User-Agent': 'proxy.oauth'
     },
   }, (error, r, body) => {
     if (!error) {
@@ -31,4 +48,4 @@ app.post('*', upload.array(), (req, res) => {
 })
 
 const port = process.env.PORT || 3000
-app.listen(port, () => console.log(`gh-oauth-server listening on port ${port}`))
+app.listen(port, () => console.log(`proxy.oauth listening on port ${port}`))

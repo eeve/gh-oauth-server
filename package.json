@@ -1,5 +1,5 @@
 {
-  "name": "gh-oauth-server",
+  "name": "proxy.oauth",
   "version": "0.0.1",
   "scripts": {
     "start": "node server"
@@ -8,6 +8,7 @@
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "multer": "^1.3.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "pm2": "^2.10.3"
   }
 }
